@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from '../styles/modules/todoItem.module.scss'
 import { getClasses } from '../utils/getClasses'
 import format from 'date-fns/format'
@@ -6,9 +6,11 @@ import { MdDelete, MdEdit } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
 import { deleteTodo } from '../redux/slices/TodoSlice'
 import toast from 'react-hot-toast'
+import TodoModal from './TodoModal'
 
 const TodoItem = ({ todo }) => {
   const dispatch = useDispatch()
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleDelete = () => {
     dispatch(deleteTodo(todo.id))
@@ -16,7 +18,7 @@ const TodoItem = ({ todo }) => {
   }
 
   const handleUpdate = () => {
-    console.log('handle Edit')
+    setIsModalOpen(true)
   }
 
   return (
@@ -45,6 +47,12 @@ const TodoItem = ({ todo }) => {
           <MdEdit />
         </div>
       </div>
+      <TodoModal
+        type='update'
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        todo={todo}
+      />
     </div>
   )
 }
