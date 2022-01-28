@@ -1,14 +1,34 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import styles from '../styles/modules/modal.module.scss'
 import { MdOutlineClose } from 'react-icons/md'
 import Button from './Button'
+import { addTodo } from '../redux/slices/TodoSlice'
+import { v4 as uuid } from 'uuid'
+import toast from 'react-hot-toast'
 
 export default function TodoModal({ isModalOpen, setIsModalOpen }) {
   const [title, setTitle] = useState('')
   const [status, setStatus] = useState('unComplete')
+  const dispatch = useDispatch()
 
   const onSubmitHandler = e => {
     e.preventDefault()
+    console.log('s')
+    if (title && status) {
+      dispatch(
+        addTodo({
+          id: uuid(),
+          title,
+          status,
+          time: new Date().toLocaleString(),
+        }),
+      )
+      setTitle('')
+      setStatus('unComplete')
+      toast.success('Task Added Successfully')
+      setIsModalOpen(false)
+    }
   }
 
   return (
@@ -50,7 +70,12 @@ export default function TodoModal({ isModalOpen, setIsModalOpen }) {
             </label>
 
             <div className={styles.buttonContainer}>
-              <Button type='submit' variant='primary' text='Add Task' />
+              <Button
+                onClick={onSubmitHandler}
+                type='submit'
+                variant='primary'
+                text='Add Task'
+              />
               <Button
                 variant='secondary'
                 text='Cancel'
