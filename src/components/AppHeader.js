@@ -1,23 +1,38 @@
-import React, { useState } from 'react'
-import Button, { SelectButton } from './Button'
-import TodoModal from './TodoModal'
-
-import style from '../styles/modules/app.module.scss'
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Button, { SelectButton } from './Button';
+import styles from '../styles/modules/app.module.scss';
+import TodoModal from './TodoModal';
+import { updateFilterStatus } from '../slices/todoSlice';
 
 function AppHeader() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false);
+  const initialFilterStatus = useSelector((state) => state.todo.filterStatus);
+  const [filterStatus, setFilterStatus] = useState(initialFilterStatus);
+  const dispatch = useDispatch();
+
+  const updateFilter = (e) => {
+    setFilterStatus(e.target.value);
+    dispatch(updateFilterStatus(e.target.value));
+  };
 
   return (
-    <div className={style.appHeader}>
-      <Button text='Click me' onClick={() => setIsModalOpen(true)} />
-      <SelectButton>
-        <option value='all'>all</option>
-        <option value='complete'>complete</option>
-        <option value='unComplete'>unComplete</option>
+    <div className={styles.appHeader}>
+      <Button variant="primary" onClick={() => setModalOpen(true)}>
+        Add Task
+      </Button>
+      <SelectButton
+        id="status"
+        onChange={(e) => updateFilter(e)}
+        value={filterStatus}
+      >
+        <option value="all">All</option>
+        <option value="incomplete">Incomplete</option>
+        <option value="complete">Completed</option>
       </SelectButton>
-      <TodoModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <TodoModal type="add" modalOpen={modalOpen} setModalOpen={setModalOpen} />
     </div>
-  )
+  );
 }
 
-export default AppHeader
+export default AppHeader;
