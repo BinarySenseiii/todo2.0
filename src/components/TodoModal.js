@@ -14,7 +14,6 @@ export default function TodoModal({ isModalOpen, setIsModalOpen }) {
 
   const onSubmitHandler = e => {
     e.preventDefault()
-    console.log('s')
     if (title && status) {
       dispatch(
         addTodo({
@@ -28,6 +27,8 @@ export default function TodoModal({ isModalOpen, setIsModalOpen }) {
       setStatus('unComplete')
       toast.success('Task Added Successfully')
       setIsModalOpen(false)
+    } else {
+      toast.error("Fields shouldn't be empty")
     }
   }
 
